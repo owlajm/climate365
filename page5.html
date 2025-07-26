@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기후행동 퀴즈 게임</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom right, #a8edea, #fed6e3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    #quiz-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+    .choice {
+      display: block;
+      margin: 10px 0;
+      padding: 10px 20px;
+      background-color: #e0f7fa;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .choice:hover {
+      background-color: #b2ebf2;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <div class="question" id="question"></div>
+    <div id="choices"></div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const allQuestions = [
+      { q: "\"종이컵\"은 어떤 분류로 버려야 할까요?", choices: ["종이류", "일반쓰레기", "종이팩류", "플라스틱류"], answer: "종이류" },
+      { q: "\"플라스틱컵\"의 올바른 처리 방법은?", choices: ["라벨 제거 후 씻어서 배출", "그냥 버리기", "물에 담가놓기", "깨서 버리기"], answer: "라벨 제거 후 씻어서 배출" },
+      { q: "\"깨진 유리\"는 어떤 분류인가요?", choices: ["유리류", "일반쓰레기", "위험폐기물", "금속류"], answer: "일반쓰레기" },
+      { q: "\"헌옷\"은 어디에 버려야 하나요?", choices: ["일반쓰레기", "플라스틱류", "의류수거함", "종이류"], answer: "의류수거함" },
+      { q: "\"종이팩\"과 \"종이컵\"의 차이점은?", choices: ["종이컵은 종이류, 종이팩은 종이팩류", "둘 다 종이류", "둘 다 종이팩류", "종이컵은 재활용 안 됨"], answer: "종이컵은 종이류, 종이팩은 종이팩류" },
+      { q: "\"페트병\"의 올바른 배출 방법은?", choices: ["라벨 제거 후 깨끗이 씻어서 배출"], answer: "라벨 제거 후 깨끗이 씻어서 배출" },
+      { q: "\"비닐랩\"은 어떤 조건에서 재활용이 가능할까요?", choices: ["깨끗이 씻고 물기를 제거해야 가능"], answer: "깨끗이 씻고 물기를 제거해야 가능" },
+      { q: "\"캔\"은 어떤 분류에 속하나요?", choices: ["금속류", "플라스틱류", "종이류"], answer: "금속류" },
+      { q: "\"전자제품\"은 어디로 배출해야 하나요?", choices: ["대형폐기물로 구청에 신고", "대형폐기물로 몰래 버리기", "대형 폐기물로 일반 쓰래기통에 부셔서 버리기"], answer: "대형폐기물로 구청에 신고" },
+      { q: "\"형광등\"은 어디에 배출하나요?", choices: ["주민센터나 마트의 전용 수거함", "일반 쓰래기", "플라스틱"], answer: "주민센터나 마트의 전용 수거함" },
+      { q: "\"주사기\"는 어떤 폐기물 분류인가요?", choices: ["일반의료폐기물", "격리의료폐기물", "위해의료폐기물"], answer: "일반의료폐기물" },
+      { q: "\"피 묻은 주사기\"의 처리 방법은?", choices: ["혈액오염폐기물로 분류되어 노란색/검정색 용기", "혈액오염폐기물로 분류되어 붉은색 용기", "일반의료폐기물로 분류되어 노란색/검정색 용기", "일반의료폐기물로 분류되어 노란색/검정색 용기"], answer: "혈액오염폐기물로 분류되어 노란색/검정색 용기" },
+      { q: "\"격리병실에서 사용한 마스크\"는 어떤 용기에 넣어야 할까요?", choices: ["붉은색 용기", "노란색 용기", "검정색 용기"], answer: "붉은색 용기" },
+      { q: "\"검사 튜브에 담긴 혈액\"은 어떤 폐기물인가요?", choices: ["조직물류폐기물", "위해의료폐기물", "일반의료폐기물"], answer: "조직물류폐기물" },
+      { q: "\"사람 치아\"는 몇 일간 보관할 수 있나요?", choices: ["60일", "30일", "15일"], answer: "60일" },
+      { q: "파타고니아의 재활용 폴리에스터 사용률은?", choices: ["92%", "80%", "75%"], answer: "92%" },
+      { q: "H&M의 지속가능 소재 기준은?", choices: ["Conscious Collection 기준 50% 이상", "Conscious Collection 기준 60% 이상", "Conscious Collection 기준 70% 이상"], answer: "Conscious Collection 기준 50% 이상" },
+      { q: "UNIQLO의 환경 프로그램 이름은?", choices: ["RE.UNIQLO", "USE.UNIQLO", "REDUCE.UNI1LO"], answer: "RE.UNIQLO" },
+      { q: "Worn Wear는 어떤 브랜드의 프로그램인가요?", choices: ["파타고니아", "유니클로", "H%M"], answer: "파타고니아" },
+      { q: "GRS 인증은 어떤 브랜드에서 사용되나요?", choices: ["파타고니아", "유니클로", "H&M"], answer: "H&M" },
+      { q: "비닐류에 해당하지 않는 것은?", choices: ["비닐봉지", "비닐랩", "플라스틱용기", "포장용 랩"], answer: "플라스틱용기" },
+      { q: "종이류 배출 시 제거해야 하는 것은?", choices: ["테이프", "인쇄", "재단", "접힘"], answer: "테이프" },
+      { q: "다음 중 '혈액오염폐기물'에 해당하지 않는 것은?", choices: ["피 묻은 주사기", "폐혈액팩", "혈액투석 회로", "깨진 유리"], answer: "깨진 유리" },
+      { q: "폐기물의 분류 기준이 아닌 것은?", choices: ["오염 여부", "형태", "용기 크기", "감염성"], answer: "용기 크기" },
+      { q: "일반의료폐기물 보관 가능 일수는?", choices: ["10일 (냉장 시 30일)", "15일 (냉장 시 30일)", "20일 (냉장 시 30일)"], answer: "15일 (냉장 시 30일)" },
+      { q: "기저귀, 생리대는 어떤 폐기물인가요?", choices: ["위해의료폐기물", "일반의료폐기물", "격리의료폐기물"], answer: "일반의료폐기물" },
+      { q: "기후행동 실천을 돕는 브랜드가 아닌 것은?", choices: ["Patagonia", "H&M", "UNIQLO", "Marlboro"], answer: "Marlboro" },
+      { q: "종이영수증은 어디로 배출할까요?", choices: ["일반쓰레기", "종이류", "종이팩류"], answer: "일반쓰레기" }
+    ];
+
+    const questions = allQuestions.sort(() => Math.random() - 0.5).slice(0, 10);
+    let score = 0;
+    let current = 0;
+
+    function showQuestion() {
+      if (current >= questions.length) {
+        let title = "";
+        if (score === 10) title = "🌎 지구를 구한 전설의 영웅";
+        else if (score === 9) title = "♻️ 기후 수호자";
+        else if (score === 8) title = "🌍 환경 천재";
+        else if (score === 7) title = "🌿 분리배출 박사";
+        else if (score === 6) title = "🧤 실천하는 시민";
+        else if (score === 5) title = " 🧹 친환경 연습생";
+        else if (score >= 3) title = "🧃 환경 병아리";
+        else if (score >= 1) title = "🧊 기후 무지렁이";
+        else title = "🗑️ 무분별 지구파괴자";
+
+        document.getElementById("quiz-container").innerHTML =
+          `<h2>퀴즈 종료!</h2><p>당신의 점수: ${score}/10</p><p>칭호: ${title}</p>`;
+        return;
+      }
+
+      const q = questions[current];
+      document.getElementById("question").innerText = `Q${current + 1}. ${q.q}`;
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+
+      q.choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.innerText = choice;
+        btn.onclick = () => {
+          if (choice === q.answer) {
+            score++;
+            document.getElementById("result").innerText = "✅ 정답!";
+          } else {
+            document.getElementById("result").innerText = `❌ 오답! 정답: ${q.answer}`;
+          }
+          current++;
+          setTimeout(() => {
+            document.getElementById("result").innerText = "";
+            showQuestion();
+          }, 1000);
+        };
+        choicesDiv.appendChild(btn);
+      });
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>

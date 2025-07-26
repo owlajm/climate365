@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카드뉴스 보기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+    }
+    body {
+      background: linear-gradient(to bottom right, #a2d5c6, #2c7fb8);
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    h1 {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+    .slider {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 90%;
+      max-width: 800px;
+    }
+    .slider img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+    .arrow {
+      background: rgba(255,255,255,0.7);
+      border: none;
+      font-size: 2rem;
+      padding: 0.5rem 1rem;
+      border-radius: 50%;
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+    .arrow:hover {
+      background: rgba(255,255,255,0.9);
+    }
+    .arrow.left {
+      left: -2rem;
+    }
+    .arrow.right {
+      right: -2rem;
+    }
+    .counter {
+      color: #fff;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>카드뉴스 보기</h1>
+
+  <div class="slider">
+    <button class="arrow left" onclick="prevSlide()">&#9664;</button>
+    <img id="slide" src="images/card1.jpg" alt="카드뉴스 1">
+    <button class="arrow right" onclick="nextSlide()">&#9654;</button>
+  </div>
+
+  <p class="counter" id="counter">1 / 8</p>
+
+  <script>
+    const totalSlides = 8;
+    let currentSlide = 1;
+
+    function showSlide(n) {
+      document.getElementById('slide').src = `images/card${n}.jpg`;
+      document.getElementById('slide').alt = `카드뉴스 ${n}`;
+      document.getElementById('counter').textContent = `${n} / ${totalSlides}`;
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        showSlide(currentSlide);
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        showSlide(currentSlide);
+      }
+    }
+  </script>
+</body>
+</html>

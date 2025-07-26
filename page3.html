@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>의류 폐기물 & 브랜드 검색</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+    }
+    body {
+      background: linear-gradient(to bottom right, #a2d5c6, #2c7fb8);
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #fff;
+      padding: 2rem;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .description {
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      max-width: 700px;
+    }
+    input[type="text"] {
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      width: 300px;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #fff;
+      color: #2c7fb8;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background-color: #2c7fb8;
+      color: white;
+    }
+    .examples {
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      color: #e6f7ff;
+    }
+    .result {
+      margin-top: 2rem;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 700px;
+    }
+  </style>
+</head>
+<body>
+  <h1>의류 폐기물 검색</h1>
+
+  <div class="description">
+    <strong>의류 폐기물 현황 (2023년 기준)</strong><br><br>
+    🔹 <strong>서울특별시</strong><br>
+    - 종류: 생활계 폐기물 – 의류류<br>
+    - 발생량: 약 21,815톤/년<br>
+    - 처리 방법: 중고 판매/기부, 섬유 재생 원료화(12%), 소각·매립(80%), 해외 처리(8%)<br><br>
+    🔹 <strong>부산광역시</strong><br>
+    - 종류: 생활계 폐기물 – 의류류<br>
+    - 발생량: 약 20,000톤/년 (추정)<br>
+    - 처리 방법: 공동주택 수거함, 재생 섬유화, 재활용 불가품 소각·매립<br><br>
+    🔹 <strong>대한민국 전체</strong><br>
+    - 발생량: 약 119,380톤/년<br>
+    - 처리 비율: 재사용/재활용 12%, 소각·매립 80%, 수출·기타 8%
+  </div>
+
+  <p class="examples">검색 가능 브랜드: Patagonia, H&M, UNIQLO</p>
+
+  <input type="text" id="searchInput" placeholder="브랜드명을 입력하세요">
+  <button onclick="searchBrand()">검색</button>
+
+  <div class="result" id="resultBox" style="display: none;">
+    <h2 id="brandName"></h2>
+    <p><strong>지속 가능한 소재 사용:</strong><br><span id="brandMaterials"></span></p>
+    <p><strong>환경적 노력:</strong><br><span id="brandEfforts"></span></p>
+  </div>
+
+  <script>
+    const brands = [
+      {
+        name: "Patagonia",
+        materials: "재활용 폴리에스터 92%, 유기농 면 100%",
+        efforts: "Worn Wear(수선·재판매·업사이클링), PFAS 무첨가 방수, Bluesign 인증 원단"
+      },
+      {
+        name: "H&M",
+        materials: "Conscious Collection 기준 50% 이상 지속가능 소재",
+        efforts: "글로벌 의류 수거 캠페인, GRS 인증 재활용 소재 사용"
+      },
+      {
+        name: "UNIQLO",
+        materials: "재활용 폴리에스터 및 유기농 면 일부 사용",
+        efforts: "RE.UNIQLO 회수·재활용 프로그램 운영"
+      }
+    ];
+
+    function searchBrand() {
+      const input = document.getElementById('searchInput').value.trim();
+      const result = brands.find(b => b.name.toLowerCase() === input.toLowerCase());
+      const box = document.getElementById('resultBox');
+
+      if (result) {
+        document.getElementById('brandName').textContent = result.name;
+        document.getElementById('brandMaterials').textContent = result.materials;
+        document.getElementById('brandEfforts').textContent = result.efforts;
+        box.style.display = 'block';
+      } else {
+        document.getElementById('brandName').textContent = '검색 결과가 없습니다';
+        document.getElementById('brandMaterials').textContent = '';
+        document.getElementById('brandEfforts').textContent = '';
+        box.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>

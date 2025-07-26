@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>분리수거 검색</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #a2d5c6, #2c7fb8);
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    p.description {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    p.examples {
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      color: #e6f7ff;
+    }
+    input[type="text"] {
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      width: 300px;
+      max-width: 80%;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #fff;
+      color: #2c7fb8;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background-color: #2c7fb8;
+      color: white;
+    }
+    .result {
+      margin-top: 2rem;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>분리수거 검색</h1>
+  <p class="description">아이템 이름을 입력하면 분리 종류와 책임 방법을 알려줘요.</p>
+  <p class="examples">
+검색 가능 항목: 종이컵, 플라스틱컵, 유리병, 스티로폼, 아이스팩, 종이팩, 캔, 페트병, 비닐봉지, 깨진유리,
+형광등, 건전지, 우유팩, 플라스틱용기, 비닐랩, 종이박스, 헌옷, 전자제품, 일회용숟가락, 종이영수증
+</p>
+
+  <input type="text" id="searchInput" placeholder="물건 이름을 입력하세요">
+  <button onclick="searchItem()">검색</button>
+
+  <div class="result" id="resultBox" style="display: none;">
+    <h2 id="itemName"></h2>
+    <p><strong>분리 종류:</strong> <span id="itemCategory"></span></p>
+    <p><strong>책임 방법:</strong> <span id="itemTip"></span></p>
+  </div>
+
+  <script>
+    const items = [
+  { name: "종이컵", category: "종이류", tip: "내용물을 비우고 깨끗이 씻은 후 버리세요." },
+  { name: "플라스틱컵", category: "플라스틱류", tip: "라벨을 제거하고 씻어서 버리세요." },
+  { name: "유리병", category: "유리류", tip: "이물질 제거 후 배출하세요." },
+  { name: "스티로폼", category: "플라스틱류", tip: "깨끗이 씻어서 배출하세요." },
+  { name: "아이스팩", category: "일반쓰레기", tip: "내용물을 버리고 일반쓰레기로 배출하세요." },
+  { name: "종이팩", category: "종이팩류", tip: "깨끗이 씻고 압착하여 배출하세요." },
+  { name: "캔", category: "금속류", tip: "내용물을 비우고 헹군 후 배출하세요." },
+  { name: "페트병", category: "플라스틱류", tip: "라벨을 제거하고 깨끗이 헹군 후 배출하세요." },
+  { name: "비닐봉지", category: "비닐류", tip: "깨끗이 씻어 물기를 제거한 후 배출하세요." },
+  { name: "깨진유리", category: "일반쓰레기", tip: "신문지에 싸서 안전하게 버리세요." },
+  { name: "형광등", category: "폐형광등", tip: "대형마트나 주민센터에 설치된 전용 수거함에 배출하세요." },
+  { name: "건전지", category: "폐건전지", tip: "동 주민센터, 마트 등에 설치된 전용 수거함에 배출하세요." },
+  { name: "우유팩", category: "종이팩류", tip: "깨끗이 씻고 펼쳐서 말린 후 배출하세요." },
+  { name: "플라스틱용기", category: "플라스틱류", tip: "라벨을 제거하고 씻어서 배출하세요." },
+  { name: "비닐랩", category: "비닐류", tip: "깨끗이 씻어 물기를 제거 후 배출하세요." },
+  { name: "종이박스", category: "종이류", tip: "테이프, 스티커 제거 후 접어서 배출하세요." },
+  { name: "헌옷", category: "의류수거함", tip: "깨끗이 세탁한 후 의류수거함에 배출하세요." },
+  { name: "전자제품", category: "대형폐기물", tip: "구청에 신고하거나 수거업체에 신청하세요." },
+  { name: "일회용숟가락", category: "플라스틱류", tip: "음식물을 제거하고 씻어서 배출하세요." },
+  { name: "종이영수증", category: "일반쓰레기", tip: "일반쓰레기로 버리세요." }
+];
+
+    function searchItem() {
+      const input = document.getElementById('searchInput').value.trim();
+      const result = items.find(item => item.name === input);
+      const box = document.getElementById('resultBox');
+      if (result) {
+        document.getElementById('itemName').textContent = result.name;
+        document.getElementById('itemCategory').textContent = result.category;
+        document.getElementById('itemTip').textContent = result.tip;
+        box.style.display = 'block';
+      } else {
+        document.getElementById('itemName').textContent = '검색 결과가 없습니다';
+        document.getElementById('itemCategory').textContent = '';
+        document.getElementById('itemTip').textContent = '';
+        box.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
